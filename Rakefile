@@ -15,9 +15,9 @@ task :model => :environment do
 
   while graph.advanced do
     initial_email = user.current_email
-    random_click_decision = [true, false].sample
+    random_open_decision = [true, false].sample
 
-    if (random_click_decision)
+    if (random_open_decision)
       graph.advance_for_branch
       puts "User received #{user.current_email.subject_content} because they opened #{initial_email.subject_content}" if graph.advanced
     else
