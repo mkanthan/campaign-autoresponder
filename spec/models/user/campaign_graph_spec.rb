@@ -37,56 +37,61 @@ RSpec.describe User::CampaignGraph do
 
   describe "start" do
     it "should set the current campaign and email to the root campaign with its first email" do
-      tree = User::CampaignGraph.new(user)
+      graph = User::CampaignGraph.new(user)
 
-      tree.start
+      graph.start
 
       expect(user.current_campaign).to eq(@onboarding_campaign)
       expect(user.current_email).to eq(@onboarding_campaign.initial_email)
+      expect(graph.advanced).to eq(true)
     end
   end
 
   describe "advance_for_delay" do
     before do
-      @tree = User::CampaignGraph.new(user)
-      @tree.start
+      @graph = User::CampaignGraph.new(user)
+      @graph.start
     end
 
-    it "should advance the user's email to the next email in the tree while keeping the same campaign" do
-      @tree.advance_for_delay
+    it "should advance the user's email to the next email in the graph while keeping the same campaign" do
+      @graph.advance_for_delay
 
       expect(user.current_campaign).to eq(@onboarding_campaign)
       expect(user.current_email).to eq(@onboarding_email2)
+      expect(@graph.advanced).to eq(true)
     end
 
     it "should advance to the next campaign and its initial email if there is no next email" do
-      @tree.advance_for_delay
-      @tree.advance_for_delay
+      @graph.advance_for_delay
+      @graph.advance_for_delay
 
       expect(user.current_campaign).to eq(@improvement_campaign)
       expect(user.current_email).to eq(@improvement_email1)
+      expect(@graph.advanced).to eq(true)
     end
   end
 
   describe "advance_for_branch" do
     before do
-      @tree = User::CampaignGraph.new(user)
-      @tree.start
+      @graph = User::CampaignGraph.new(user)
+      @graph.start
     end
 
     it "should advance to the next campaign and its initial email" do
-      @tree.advance_for_branch
+      @graph.advance_for_branch
 
       expect(user.current_campaign).to eq(@feature_campaign)
       expect(user.current_email).to eq(@feature_email1)
+      expect(@graph.advanced).to eq(true)
     end
 
     it "should do nothing if it has reached the end of the campaigns" do
-      @tree.advance_for_branch
-      @tree.advance_for_branch
+      @graph.advance_for_branch
+      @graph.advance_for_branch
 
       expect(user.current_campaign).to eq(@feature_campaign)
       expect(user.current_email).to eq(@feature_email1)
+      expect(@graph.advanced).to eq(false)
     end
   end
 end
