@@ -65,7 +65,7 @@ I personally use [rbenv](https://github.com/rbenv/rbenv) along with [rbenv-gemse
    - An email also needs subject line, body, and a delay amount to tell the system when the next email should be sent
    - A user has a current email, campaign and user data such as name and email
 
-2. The architecture is such that the user's data will keep its place in the graph by using `current_campaign` and `current_email`. The `Campaign` and `Email` models are parent-child relationships. A `Campaign` needs to know the first email in the graph, and an `Email` needs to know the next `Email` or `Campaign` in the graph.
+2. The architecture is such that the user model will keep its place in the graph by using `current_campaign` and `current_email`. The `Campaign` and `Email` models are parent-child relationships. A `Campaign` needs to know the first email in the graph, and an `Email` needs to know the next `Email` or `Campaign` in the graph.
 
 3. All of the logic around whether or not a user will move on to the next email or campaign is contained within `User::CampaignGraph` under the `/models/user/` directory. This class is responsible for updating the user's current position (email and campaign) within the model.
 
